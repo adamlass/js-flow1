@@ -1,12 +1,5 @@
 # js-flow1
  Advanced JavaScript - Flow 1 hand-in
-
-Remember to "npm install" on the node projects
-
-
-Havde ikke forstået at man skulle besvare en masse spørgsmål som en del af denne opgave, så det vil jeg lige gøre...
-
-Her er starten:
 ## Period-1 Vanilla JavaScript, es2015/15.., Node.js, Babel + Webpack and TypeScript
 
 ### Explain and Reflect:
@@ -375,24 +368,210 @@ ES6 and Java inherritance are very similar, though the inherritance in ES6 is im
 
 Following examples are both implemented using "Create React App" which install both
 [Our Carondo exam project](https://corporategroup.dk/CarondoEmployee/#/)
+
 [Lars Royality Brand](https://adamlass.com/LRB/#/1)
 
 >Provide a number of examples to demonstrate the benefits of using TypeScript, including, types, interfaces, classes and generics
 
+In the following example, its very clear to see the benefits of using **Interfaces** in typescript:
+````
+interface IPerson {
+    name: string
+}
+interface IAddress {
+    street: string
+}
+
+function loggerV3(p: IPerson, a: IAddress) {
+    console.log(`Value of number: ${p.name}, Value of msg: ${a.street}`);
+}
+
+let person = {name: "Kurt Wonnegut"}
+let address = {street: "Lyngbyvej 23"}
+
+loggerV3(person,address)
+````
+Here we can be certain that the objects that come in, contain some values that we can dot in on. Here it also uses Duck Typing since we have not defined a class for the implementations, but simply have used somee objects with the right field names.
+
+Another huge benefit is that we always know what values an object holds when developing.
+
+If we wanted to, we could also provide a some **class** declarations that implements the interfaces given above:
+
+````
+class Person implements IPerson{
+    //one way of constructing
+    public name;
+    constructor(name : string){
+        this.name = name
+    }
+}
+
+class Address implements IAddress{
+    //another, much more simple way of constructing
+    constructor(public street: string){}
+}
+````
+
+For **types** we can declare the variable types like this:
+````
+var name : string = "Adam Lass"
+````
+
+We can use **generics** both in functions and classes:
+````
+function loggerV4<T,U>(p: T, a: U) {
+    return `Value of number: ${p}, Value of msg: ${a}`
+}
+
+loggerV4(person,address)
+
+
+class GenericLogger<T,U>{
+    log = (a:T, b:U) => console.log(`Val 1 ${a}, Val 2 ${b}`);
+    
+}
+
+const personLogger = new GenericLogger<IPerson,IAddress>()
+````
+
 
 >Explain the ECMAScript Proposal Process for how new features are added to the language (the TC39 Process)
+The ECMAScript proposal process consist of 5 different stages:
+
+**Stage 0: strawman**
+Here anyone can submit their ideas.
+
+**Stage 1: proposal**
+Here more defined proposals exists with demos, pro's and con's explained and examples. Here a so called "champion"/responsable must be identified.
+
+**Stage 2: draft**
+Here the first version of what will be in the specification is defined. Further implementations should only be incremental.
+
+**Stage 3: candidate**
+The proposal is mostly finished and now needs feedback from implementations and users to progress further.
+
+**Stage 4: finished**
+The proposal is ready to be included in the next version.
 
 ### Callbacks, Promises and async/await
 
 >Explain about promises in ES-6 including, the problems they solve, a quick explanation of the Promise API and:
 
+In ES6 it is possible to use the syntax async/await which is syntactical sugar that makes it look like that you are creating async code, but in reality it just uses callbacks.
+
+The syntax looks like this:
+
+````
+const request = async () => {
+    const response = await fetch('https://api.com/values/1');
+    const json = await response.json();
+    console.log(json);
+}
+
+request();
+````
+
 >Example(s) that demonstrate how to avoid the callback hell  (“Pyramid of Doom")
+
+The pyramid of doom looks something like this:
+
+[](https://pbs.twimg.com/media/COYihdoWgAE9q3Y.jpg:large)
+
+And it can be fixed very easily with the syntax of ES6's async/await by doing something like this:
+````
+module.exports = getPlanetforFirstSpeciesInFirstMovieForPersonAsync = async (id) => {
+
+    try{
+        const json1 = fetch("https://swapi.co/api/people/" + id)
+        .then(res => res.json())
+    const data1 = await json1.then(data => data)
+
+    const json2 = fetch(data1["films"][0])
+        .then(res => res.json())
+    const data2 = await json2.then(data => data)
+
+    const json3 = fetch(data2["species"][0])
+        .then(res => res.json())
+    const data3 = await json3.then(data => data)
+
+    const json4 = fetch(data3["homeworld"])
+        .then(res => res.json())
+    const data4 = await json4.then(data => data)
+
+    console.log("data4:", data4)
+
+    } catch (err) {
+        console.error(err)
+    }
+    
+
+}
+````
 
 >Example(s) that demonstrate how to execute asynchronous (promise-based) code in serial or parallel
 
+**Serial**:
+````
+async function fetchPerson(url) {
+    return fetch(url)
+    .then(data => data.json())
+    .then(data => data)
+}
+async function printNames() {
+    var person1 = await fetchPerson(URL + 1);
+    var person2 = await fetchPerson(URL + 2);
+}
+````
+
+**Parallel**:
+````
+async function fetchPerson(url) {
+    return fetch(url)
+    .then(data => data.json())
+    .then(data => data)
+}
+
+async function printNames() {
+    promises = []
+    promises.push(fetchPerson(URL +1))
+    promises.push(fetchPerson(URL +2))
+    
+    var allData = await Promise.all(promises)
+}
+````
+
+
 >Example(s) that demonstrate how to implement our own promise-solutions.
+````
+new Promise((res,rej)=> {
+        const asJson = () => {
+            return new Promise((res,rej) => {
+                return res(JSON.stringify({words:str.split(" ")}))
+            })
+        }
+        var data = {
+            upperCased: str.toUpperCase(),
+            msgLength: str.length,
+            asJson: asJson
+        }
+        return res(data)
+        //reject not used
+}
+````
+
 
 >Example(s) that demonstrate error handling with promises
+````
+try{
+    const json1 = fetch("https://swapi.co/api/people/" + id)
+    .then(res => res.json())
+    const data1 = await json1.then(data => data)
+    
+} catch (err) {
+    console.error(err)
+}
+````
+
 
 >Explain about JavaScripts async/await, how it relates to promises and reasons to use it compared to the plain promise API.
 Provide examples to demonstrate 
@@ -400,3 +579,19 @@ Why this often is the preferred way of handling promises
 Error handling with async/await
 Serial or parallel execution with async/await.
 
+Async/Await can function as wrappers around promises, and in this way make the code a lot more readable, especially when in a "pyramid of doom" scenario, or when using try-catch(-finally) syntax.
+````
+try{
+    const json = fetch("https://swapi.co/api/people/" + id)
+    .then(res => res.json())
+    const data = await json1.then(data => data)
+    return data
+    
+} catch (err) {
+    console.error(err)
+} finally {
+    console.log("Done")
+}
+````
+
+The rest is explained/examplified above.
