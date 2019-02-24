@@ -7,7 +7,6 @@ Remember to "npm install" on the node projects
 Havde ikke forstået at man skulle besvare en masse spørgsmål som en del af denne opgave, så det vil jeg lige gøre...
 
 Her er starten:
-
 ## Period-1 Vanilla JavaScript, es2015/15.., Node.js, Babel + Webpack and TypeScript
 
 ### Explain and Reflect:
@@ -84,7 +83,7 @@ export default function multiply(a, b) {
 }
 ```
 
-``main.js```
+``main.js``
 ```
 import multiply from "./multiply"
 
@@ -225,20 +224,179 @@ myMap(arr, cb)
 
 >Explain the methods map, filter and reduce
 
+***map*** is a function that iterates over an Array and returns a new instance of it with values manipulated by a callback function. (like the example just above)
+
+***filter*** is a function that iterates over an Array and returns a new instance of it with only the values that when passed through the callback returnes true:
+```
+arr.filter(x => x.length <= 3)
+```
+
+
+***reduce*** is a function that with use of a callback iterates over an Array and returns a single value that is the accumulated value of all the datapoints in the Array. I start with a startvalue defined as the second parameter (In this case it is 0):
+````
+let numbers = [2, 3, 67, 33]; 
+numbers.reduce((acc, cur) => acc + cur ,0)
+````
+
+
 >Provide examples of user-defined reusable modules implemented in Node.js
+**Example 1:**
+````
+module.exports =  function f(x, y, ...rest) {
+    console.log("Sum:", x + y)
+    return rest.map((obj, idx) => `rest valaue ${idx} is a: ${typeof obj}`)
+}
+````
+
+**Example 2:**
+````
+module.exports = [1,2,3,4]
+````
 
 ### ES6,7,8... and TypeScript
 
->Provide examples and explain the es2015 features: let, arrow functions, this, rest parameters, 
+>Provide examples and explain the es2015 features: let, arrow functions, this, rest parameters, de-structuring assignments, maps/sets etc.
 
->de-structuring assignments, maps/sets etc.
+**let** is a variable declaration that compared to **var** doesn't get hoisted. That means that the following code, compared to use of var, wont work:
+````
+x = 3
+
+let x
+````
+
+
+An **Arrow function** is a function that that has a simpler syntax than function declarations. When writing an arrow function on a single line, the arrow (=>) has an **implicit return** written in front of it, making whatever written after the arrow the return value:
+````
+(a, b) => a + b
+````
+This behavioure can be avoided by using curly braces like this:
+````
+(a, b) => {a + b}
+````
+\-also giving the option of returning later in the program:
+````
+(a, b) => {
+    c = a + b
+    return c
+}
+````
+
+**rest parameters** makes it possible to treat input parameters as a list of arguments:
+````
+function sum(...theArgs) {
+  return theArgs.reduce((previous, current) => {
+    return previous + current;
+  });
+}
+````
+so that you can call the function with any number of parameters:
+`````
+sum(1, 2, 3)
+sum(1, 2, 3, 4)
+`````
+
+**Destructing assignments** can be used to extract values from lists or objects fast and convinient:
+
+Destructing assignments with List:
+````
+list = [1,2,3,4]
+
+let [indexZero] = list
+````
+
+Destructing assignments with Objects:
+````
+let obj = {name:"Adam", phone:"12345678"}
+
+let {name} = obj
+````
+
+**Set**'s in javascript is a datatype that lets you store unique values in a iterable data structure.
+A Set can be declared like this:
+
+````
+const set1 = new Set([1, 2, 3, 4, 5, 5])
+````
 
 > Explain and demonstrate how es2015 supports modules (import and export) similar to what is offered by NodeJS.
 
+The implementation is just like using babel:
+
+``multiply.js``
+```
+export default function multiply(a, b) {
+    return a * b
+}
+```
+
+``main.js``
+```
+import multiply from "./multiply"
+
+multiply(3,4)
+```
+
+
+
 >Provide an example of ES6 inheritance and reflect over the differences between Inheritance in Java and in ES6.
 
+````
+class Animal {
+
+  constructor (name) {
+    this.name = name;
+  }
+ 
+  getName () {
+    return this.name;
+  }
+ 
+}
+
+class Ape extends Animal {
+ 
+  constructor (name, numLice) {
+    super(name);
+    this.numLice = numLice
+  }
+ 
+  getName () {
+    return 'The Apes name is: ' + super.getName();
+  }
+ 
+}
+let ape = new Ape('Mario');
+````
+
+ES6 and Java inherritance are very similar, though the inherritance in ES6 is implemented by transpiling it into prototype assingments, which is different from what you would see in java.
+
+
 >Provide examples with es-next, running in a browser, using Babel and Webpack
->Provide a number of examples to demonstrate the benefits of using TypeScript, including, types, interfaces, 
->classes and generics
+
+Following examples are both implemented using "Create React App" which install both
+[Our Carondo exam project](https://corporategroup.dk/CarondoEmployee/#/)
+[Lars Royality Brand](https://adamlass.com/LRB/#/1)
+
+>Provide a number of examples to demonstrate the benefits of using TypeScript, including, types, interfaces, classes and generics
+
 
 >Explain the ECMAScript Proposal Process for how new features are added to the language (the TC39 Process)
+
+### Callbacks, Promises and async/await
+
+>Explain about promises in ES-6 including, the problems they solve, a quick explanation of the Promise API and:
+
+>Example(s) that demonstrate how to avoid the callback hell  (“Pyramid of Doom")
+
+>Example(s) that demonstrate how to execute asynchronous (promise-based) code in serial or parallel
+
+>Example(s) that demonstrate how to implement our own promise-solutions.
+
+>Example(s) that demonstrate error handling with promises
+
+>Explain about JavaScripts async/await, how it relates to promises and reasons to use it compared to the plain promise API.
+Provide examples to demonstrate 
+Why this often is the preferred way of handling promises
+Error handling with async/await
+Serial or parallel execution with async/await.
+
